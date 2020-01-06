@@ -2,8 +2,6 @@
 
 module.exports = function(fastify, opts, next) {
   fastify.get("/", function(request, reply) {
-    const user = require("../models/model");
-    user.user();
     reply.send({ root: true });
   });
 
