@@ -50,8 +50,8 @@ async function user(fastify, __) {
     var hash = crypto
       .pbkdf2Sync(password, this.name, 1000, 64, `sha512`)
       .toString(`hex`);
-
-    return this.password === hash;
+    return hash;
+    //return this.password === hash;
   };
 
   fastify.decorate("User", User);

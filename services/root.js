@@ -15,23 +15,45 @@
 module.exports = async function(fastify, opts) {
   fastify.get("/", async function(request, reply) {
     //trying decorator!!!
+
+    //create user table
     //fastify.User.create({ name: "Abid", email: "abid@eresolute.com" });
 
+    //CHECKING PASSWORD HASHING
     console.log(fastify.User.setPassword("hello"));
 
-    let test = fastify.User.validatePassword("hello");
+    //let test = fastify.User.validatePassword("hello");
     console.log(fastify.User.validatePassword("hello"));
 
-    console.log(test === fastify.User.validatePassword("hello"));
+    // console.log(test === fastify.User.validatePassword("hello"));
 
-    // if (fastify.User.validatePassword("hello!")) {
-    //   fastify.log.warn("Password does not match");
-    // }
+    //ENCRYPTION USING CERTIFICATES!
+    let generate = fastify.encrypt("hello");
+    console.log(generate);
+    let check = fastify.decrypt(generate);
+    fastify.log.warn(check);
 
-    // if (fastify.User.validatePassword("hello")) {
-    //   fastify.log.info("Password matched!");
-    // }
     return fastify.someSupport();
     //ends test
   });
+
+  fastify.get("/auth", async function(request, reply) {
+    let payload = {
+      sub: "327241123",
+      name: "Abid Rashid",
+      admin: true
+    };
+    const token = fastify.jwt.sign(payload);
+    reply.send({ token });
+  });
+
+  fastify.get(
+    "/validate",
+    {
+      preValidation: [fastify.authenticate]
+    },
+    async function(request, reply) {
+      return request.user;
+    }
+  );
 };

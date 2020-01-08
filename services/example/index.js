@@ -1,8 +1,24 @@
 "use strict";
 
 module.exports = function(fastify, opts, next) {
-  fastify.get("/example", function(request, reply) {
-    reply.send("this is an example");
+  const other_opts = {
+    schema: {
+      querystring: {
+        name: { type: "string" },
+        excitement: { type: "integer" }
+      },
+      response: {
+        200: {
+          type: "object",
+          properties: {
+            this: { type: "string" }
+          }
+        }
+      }
+    }
+  };
+  fastify.get("/example", other_opts, function(request, reply) {
+    reply.send({ this: 123, that: "123" });
   });
 
   next();
