@@ -13,6 +13,9 @@
 // If you prefer async/await, use the following
 //
 module.exports = async function(fastify, opts) {
+  //adding pre-handler to all the route
+  //fastify.addHook("preHandler", fastify.auth([fastify.verifyCredentials]));
+
   fastify.get("/", async function(request, reply) {
     //trying decorator!!!
 
@@ -46,6 +49,29 @@ module.exports = async function(fastify, opts) {
     const token = fastify.jwt.sign(payload);
     reply.send({ token });
   });
+
+  //Verifying Particular Auth Route
+  fastify.get(
+    "/checkAuth",
+    {
+      preHandler: fastify.auth([fastify.verifyCredentials])
+    },
+    async function(request, reply) {
+      return fastify.someSupport();
+    }
+  );
+
+  //Verifying Particular Auth Route
+  fastify.get(
+    "/permit",
+    {
+      preHandler: fastify.auth([fastify.permit])
+    },
+    async function(request, reply) {
+      fastify.log.warn(fastify.hasRequestDecorator("user"));
+      reply.send(`Hello ${request.user.username}!`);
+    }
+  );
 
   fastify.get(
     "/validate",
