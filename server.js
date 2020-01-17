@@ -9,7 +9,8 @@ const Fastify = require("fastify");
 // Fastify Config
 const app = Fastify({
   logger: true,
-  pluginTimeout: 10000
+  pluginTimeout: 10000,
+  onProtoPoisoning: "remove"
 });
 
 // Registering application as a normal plugin.
